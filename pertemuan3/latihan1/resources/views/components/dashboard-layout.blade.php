@@ -9,6 +9,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+
     <title>{{ $title }}</title>
 </head>
 <body>
@@ -75,5 +76,7 @@
         <p class="text-sm md:text-base">Biagi Archie Fais © 2025</p>
     </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 </body>
 </html>
