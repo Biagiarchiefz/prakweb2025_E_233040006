@@ -1,17 +1,28 @@
 @props(['categories'])
 
 {{-- Form body --}}
-<form action="{{ route('dashboard.store') }}" method="POST">
+<form action="{{ route('dashboard.store') }}" method="POST" encype=”multipart/formdata”>
     @csrf
     <div class="grid sm:grid-cols-2 gap-4 sm:gap-6">
-        {{-- Title --}}
+{{--        --}}{{-- Title --}}
+{{--        <div class="col-span-2">--}}
+{{--            <label for="title" class="block mb-2.5 text-sm font-medium text---}}
+{{--                heading">Title</label>--}}
+{{--            <input type="text" name="title" id="title" value="{{ old('title') }}" class="bg---}}
+{{--                neutral-secondary-medium border border-default medium-text text-sm rounded-base--}}
+{{--                focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"--}}
+{{--                   placeholder="Enter post title" />--}}
+{{--        </div>--}}
+        {{-- implementasi pada field tittle --}}
         <div class="col-span-2">
-            <label for="title" class="block mb-2.5 text-sm font-medium text-
-                heading">Title</label>
-            <input type="text" name="title" id="title" value="{{ old('title') }}" class="bg-
-                neutral-secondary-medium border border-default medium-text text-sm rounded-base
-                focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+            <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Title</label>
+            <input type="text" name="title" id="title" value="{{ old('title') }}" class="bg-neutral-
+        secondary-medium border border-default medium-text text-sm rounded-base focus:ring-brand
+        focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
                    placeholder="Enter post title" />
+            @error('title')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Category --}}
@@ -29,6 +40,9 @@
                     </option>
                 @endforeach
             </select>
+            @error('$category_id')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Excerpt --}}
@@ -39,6 +53,9 @@
                 medium border border-default medium-text text-sm rounded-base focus:ring-brand
                 focus:border-brand w-full p-3.5 shadow-xs placeholder:text-body" placeholder="Write a short
                 excerpt or summary">{{ old('excerpt') }}</textarea>
+            @error('excerpt')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- Body --}}
@@ -49,7 +66,30 @@
                 border border-default medium-text text-heading rounded-base focus:ring-brand focus:border-
                 brand w-full p-3.5 shadow-xs placeholder:text-body" placeholder="Write your post content
                 here">{{ old('body') }}</textarea>
+            @error('body')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
+
+
+        {{-- Image Upload --}}
+        <div class="col-span-2">
+            <label for="image" class="block mb-2.5 text-sm font-medium text-heading">Upload
+                Image</label>
+            <input
+                type="file"
+                name="image"
+                id="image"
+                accept="image/png, image/jpeg, image/jpg"
+                class="cursor-pointer bg-neutral-secondary-medium border text-heading text-sm
+            rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-
+            body">
+            @error('image')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+
     </div>
 
     {{-- Form Footer --}}

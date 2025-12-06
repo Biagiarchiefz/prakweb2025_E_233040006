@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class DashboardPostController extends Controller
@@ -53,6 +54,40 @@ class DashboardPostController extends Controller
             $counter++;
         }
 
+        // Handle file upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // Store file distorage/app/public/post-images
+            // Method store() akan generate nama file unit otomatis
+            $imagePath = $request->file('image')->store('post-images', 'public');
+        }
+
+        // Validasi input dengan custome message
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            // aturan untuk menambah gambar: opsional(nullable), harus berupa image,format tertentu, maksimal 2MB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Maksimal 2MB
+        ], [ // custme message
+            'title.required' => 'Title is required.',
+            'title.max' => 'Title cannot exceed 255 characters.',
+            'excerpt.required' => 'Excerpt is required.',
+            'body.required' => 'Body is required.',
+            'category_id.required' => 'Category is required.',
+            'category_id.exists' => 'Selected category does not exist.',
+            'image.image' => 'Uploaded file must be an image.',
+            'image.mimes' => 'format gambar must be jpeg, png, jpg, or gif.',
+            'image.max' => 'Image size cannot exceed 2MB.',
+        ]);
+
+        // jika validasi gagal, redirect kembali dengan error
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)  // megirim pesan error kemabli
+                ->withInput();         // mengirim semua data yang sudah diinput ( old data)
+        }
 
         // Create Post
         Post::create([
@@ -61,6 +96,7 @@ class DashboardPostController extends Controller
             'excerpt' => $request->excerpt,
             'body' => $request->body,
             'category_id' => $request->category_id,
+            'image' => $imagePath,
             'user_id' => auth()->user()->id,
         ]);
 
